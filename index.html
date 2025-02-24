@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification Tool</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Email Verification Tool</h1>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('single')">Single Email</button>
+            <button class="tab-btn" onclick="showTab('bulk')">Bulk Upload</button>
+        </div>
+
+        <!-- Single Email Verification -->
+        <div id="single" class="tab-content active">
+            <h2>Verify Single Email</h2>
+            <form id="email-form">
+                <input type="email" id="email" placeholder="Enter email" required>
+                <button type="submit">Verify</button>
+            </form>
+            <div id="single-result"></div>
+        </div>
+
+        <!-- Bulk Email Verification -->
+        <div id="bulk" class="tab-content">
+            <h2>Upload CSV for Bulk Email Verification</h2>
+            <form id="upload-form" enctype="multipart/form-data">
+                <input type="file" id="file" accept=".csv" required>
+                <button type="submit">Upload</button>
+            </form>
+            <h2>Results</h2>
+            <table id="result-table">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+            document.querySelector(`#${tabName}`).style.display = 'block';
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+        }
+        
+        document.getElementById("email-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            let email = document.getElementById("email").value;
+            let response = await fetch("/verify/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email })
+            });
+            let data = await response.json();
+            document.getElementById("single-result").innerText = "Status: " + data.status;
+        });
+
+        document.getElementById("upload-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            let formData = new FormData();
+            formData.append("file", document.getElementById("file").files[0]);
+
+            let response = await fetch("/upload_csv/", {
+                method: "POST",
+                body: formData
+            });
+
+            let data = await response.json();
+            let tableBody = document.querySelector("#result-table tbody");
+            tableBody.innerHTML = "";
+
+            data.results.forEach(result => {
+                let row = document.createElement("tr");
+                row.innerHTML = `<td>${result.email}</td><td>${result.status}</td>`;
+                tableBody.appendChild(row);
+            });
+        });
+
+        showTab('single');
+    </script>
+</body>
+</html>

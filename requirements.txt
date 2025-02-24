@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+dnspython
+smtplib
+jinja2

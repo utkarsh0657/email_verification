@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.container {
+    margin-top: 50px;
+    padding: 20px;
+    background: white;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 0px 10px gray;
+    border-radius: 5px;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px;
+    border: none;
+    background: lightgray;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.tab-btn.active {
+    background: blue;
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+input, button {
+    padding: 10px;
+    margin: 10px;
+    width: 80%;
+}
+
+button {
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 10px;
+}
